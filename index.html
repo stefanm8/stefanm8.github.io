@@ -30,18 +30,20 @@
     <script>
         async function getPages() {
             const pages = await fetch("https://api.github.com/repos/stefanm8/stefanm8.github.io/contents/assets/blog")
+            console.log(pages)
             const pagesJson = await pages.json()
             return pagesJson.map(page => {
                 p = {
+                    path: page.name,
                     date: page.name.split("_")[0],
                     title: page.name.split("_")[1].replace(".html", "")
                 }
+                return p
             }).filter(page => page.endsWith(".html"))
         }
 
         async function renderPages(pages) {
-            document.getElementById("container").innerHTML = pages.map(page => `<a href="assets/blog/${page.name}">${page}</a>`).join("")
-
+            document.getElementById("container").innerHTML = pages.map(page => `<a href="assets/blog/${page.path}">${page.title}</a>`).join("")
         }
 
         async function main() {
