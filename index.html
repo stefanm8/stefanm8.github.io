@@ -22,8 +22,40 @@
 
     <p> Tune in this will eventually turn into a blog </p>
 
+    <div id="container">
+
+    </div>
+
 
     <script>
+        async function getPages() {
+            const pages = await fetch("https://api.github.com/repos/stefanm8/stefanm8.github.io/contents/assets/blog")
+            const pagesJson = await pages.json()
+            return pagesJson.map(page => {
+                p = {
+                    date: page.name.split("_")[0],
+                    title: page.name.split("_")[1].replace(".html", "")
+                }
+            }).filter(page => page.endsWith(".html"))
+        }
+
+        async function renderPages(pages) {
+            document.getElementById("container").innerHTML = pages.map(page => `<a href="assets/blog/${page.name}">${page}</a>`).join("")
+
+        }
+
+        async function main() {
+            const pages = await getPages()
+            console.log(pages)
+            await renderPages(pages)
+        }
+
+        (async () => {
+            await main()
+        })()
+
+
+
     </script>
     
 </body>
