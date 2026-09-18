@@ -1,5 +1,7 @@
 import markdown2, re, glob, pathlib, os, json
 
+def get_title(content: str) -> str:
+    return re.search(r"<h1>(.*)</h1>", content, re.IGNORECASE | re.DOTALL).group(1)
 
 def serialize_filename(filename: str, content: str) -> str:
     full_name = filename.split(".")
@@ -8,9 +10,8 @@ def serialize_filename(filename: str, content: str) -> str:
     return f"{name}_{title.replace(' ', '-')}.html"
 
 def parse_filename(fname: str) -> dict:
-    print(fname)
     return {
-        "title": fname.split("_")[1].replace(".md", ""),
+        "title": fname.split("_")[1].replace(".html", "").replace("-", " "),
         "date": fname.split("_")[0],
         "path": fname,
     }
@@ -31,6 +32,32 @@ def build_files_json(files):
             files_json.append(parse_filename(file.name))
         f.write(json.dumps(files_json))
 
+
+def with_parts(html: str) -> str:
+    with open("index.html", "r") as f:
+        index = f.read()
+    
+
+    
+    head = re.search(r"<head>(.*)</head>", index, re.IGNORECASE | re.DOTALL).group(1)
+    footer = re.search(r"<footer>(.*)</footer>", index, re.IGNORECASE | re.DOTALL).group(1)
+    head = re.sub(r"<title>(.*)</title>", lambda _: f"<title>{get_title(html)}</title>", head, flags=re.IGNORECASE | re.DOTALL)
+
+    return f"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{head}
+</head>
+<body>
+{html}
+<footer>
+{footer}
+</footer>
+</body>
+</html>
+"""
+
 def build_blog():
     files = glob.glob("blog/*.md")
 
@@ -41,10 +68,14 @@ def build_blog():
         html = markdown2.markdown(markdown)
         dest = pathlib.Path("assets/blog") / serialize_filename(file.name, html)
         with open(dest, "w") as f:
-            f.write(html)
+            f.write(with_parts(html))
     
     files = glob.glob("assets/blog/*.html")
     build_files_json(files)
+
+
+
+
 
 if __name__ == "__main__":
     clean_assets()

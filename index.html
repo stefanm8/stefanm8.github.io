@@ -29,17 +29,8 @@
 
     <script>
         async function getPages() {
-            const pages = await fetch("https://api.github.com/repos/stefanm8/stefanm8.github.io/contents/assets/blog")
-            console.log(pages)
-            const pagesJson = await pages.json()
-            return pagesJson.map(page => {
-                p = {
-                    path: page.name,
-                    date: page.name.split("_")[0],
-                    title: page.name.split("_")[1].replace(".html", "")
-                }
-                return p
-            }).filter(page => page.endsWith(".html"))
+            const pages = await fetch("assets/files.json")
+            return pages.json()
         }
 
         async function renderPages(pages) {
@@ -59,6 +50,11 @@
 
 
     </script>
-    
+
+    <footer>
+        <p>
+            &copy; 2026 stefanm8
+        </p>
+    </footer>
 </body>
 </html>
