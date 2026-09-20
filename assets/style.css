@@ -1,0 +1,17 @@
+h1 {
+  font-size: 2rem;
+  text-align: center;
+}
+
+body {
+  max-width: 700px;
+  text-wrap: pretty;
+  margin: 0 auto;
+}
+
+p, li {
+  font-size: 1.4rem;
+}
+a {
+  overflow-wrap: anywhere;
+}
