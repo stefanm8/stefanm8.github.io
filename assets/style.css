@@ -16,3 +16,14 @@ p, li {
 a {
   overflow-wrap: anywhere;
 }
+
+.post-list-item {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}
+
+.post-list-item a {
+  font-size: 1.4rem;
+  text-decoration: none;
+}

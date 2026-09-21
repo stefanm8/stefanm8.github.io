@@ -28,13 +28,23 @@
     <div id="container"></div>
 
     <script>
+
+        function getListItemComponent(page) {
+            return `
+<div class="post-list-item">
+    <a href="assets/blog/${page.path}">${page.title}</a>
+    <span>${page.date}</span>
+</div>
+`
+        }
+
         async function getPages() {
             const pages = await fetch("assets/files.json")
             return pages.json()
         }
 
         async function renderPages(pages) {
-            document.getElementById("container").innerHTML = pages.map(page => `<a href="assets/blog/${page.path}">${page.title}</a>`).join("")
+            document.getElementById("container").innerHTML = pages.map(page => getListItemComponent(page)).join("")
         }
 
         async function main() {
