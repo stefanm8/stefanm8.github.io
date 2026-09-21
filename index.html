@@ -8,7 +8,7 @@
     <title>stefanm8's Personal Website</title>
 </head>
 <body>
-
+<!-- 
     <h1>
         <a href="https://github.com/stefanm8">Stefan Mihărtescu's</a> space
     </h1>
@@ -21,10 +21,13 @@
     
     <p> email me at: stefanmihartescu@gmail.com </p>
 
-    <p> Entirely made by hand, source code <a href="https://github.com/stefanm8/stefanm8.github.io">here</a></p>
+    <p> Entirely made by hand, source code <a href="https://github.com/stefanm8/stefanm8.github.io">here</a></p> -->
 
+    <header>
+        <a href="/">Stefan Mihartescu's Blog</a>
+        <a href="/about">About</a>
+    </header>
     <hr>
-    <p>Posts</p>
     <div id="container"></div>
 
     <script>
@@ -32,7 +35,7 @@
         function getListItemComponent(page) {
             return `
 <div class="post-list-item">
-    <a href="assets/blog/${page.path}">${page.title}</a>
+    <a href="/posts/${page.path}">${page.title}</a>
     <span>${page.date}</span>
 </div>
 `

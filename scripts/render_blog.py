@@ -16,8 +16,8 @@ def parse_filename(fname: str) -> dict:
         "path": fname,
     }
 
-def clean_assets():
-    for file in glob.glob("assets/blog/*"):
+def clean_assets(assets_dest: str):
+    for file in glob.glob(f"{assets_dest}/*"):
         if file == ".gitignore":
             continue
         os.remove(file)
@@ -58,7 +58,7 @@ def with_parts(html: str) -> str:
 </html>
 """
 
-def build_blog():
+def build_blog(assets_dest: str):
     files = glob.glob("blog/*.md")
 
     for file in files:
@@ -66,11 +66,11 @@ def build_blog():
         with open(file, "r") as f:
             markdown = f.read()
         html = markdown2.markdown(markdown)
-        dest = pathlib.Path("assets/blog") / serialize_filename(file.name, html)
+        dest = pathlib.Path(assets_dest) / serialize_filename(file.name, html)
         with open(dest, "w") as f:
             f.write(with_parts(html))
     
-    files = glob.glob("assets/blog/*.html")
+    files = glob.glob(f"{assets_dest}/*.html")
     build_files_json(files)
 
 
@@ -78,5 +78,6 @@ def build_blog():
 
 
 if __name__ == "__main__":
-    clean_assets()
-    build_blog()
+    assets_dest = "posts" # relative to workdir
+    clean_assets(assets_dest)
+    build_blog(assets_dest)
