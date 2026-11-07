@@ -8,59 +8,44 @@
     <title>stefanm8's Personal Website</title>
 </head>
 <body>
-<!-- 
-    <h1>
-        <a href="https://github.com/stefanm8">Stefan Mihărtescu's</a> space
-    </h1>
-
-    <h3>
-        Check my <a href="https://www.linkedin.com/in/stefanm8/">linkedin</a>
-    </h3>
-
-    <h3> Want to get in contact ? </h3>
-    
-    <p> email me at: stefanmihartescu@gmail.com </p>
-
-    <p> Entirely made by hand, source code <a href="https://github.com/stefanm8/stefanm8.github.io">here</a></p> -->
-
     <header>
         <a href="/">Stefan Mihartescu's Blog</a>
         <a href="/about">About</a>
     </header>
     <hr>
-    <div id="container"></div>
+    <!-- Post pages reuse this layout and replace the main content. -->
+    <main id="container">
+        <script>
 
-    <script>
-
-        function getListItemComponent(page) {
-            return `
+            function getListItemComponent(page) {
+                return `
 <div class="post-list-item">
     <a href="/posts/${page.path}">${page.title}</a>
     <span>${page.date}</span>
 </div>
 `
-        }
+            }
 
-        async function getPages() {
-            const pages = await fetch("assets/files.json")
-            return pages.json()
-        }
+            async function getPages() {
+                const pages = await fetch("assets/files.json")
+                return pages.json()
+            }
 
-        async function renderPages(pages) {
-            document.getElementById("container").innerHTML = pages.map(page => getListItemComponent(page)).join("")
-        }
+            async function renderPages(pages) {
+                document.getElementById("container").innerHTML = pages.map(page => getListItemComponent(page)).join("")
+            }
 
-        async function main() {
-            const pages = await getPages()
-            await renderPages(pages)
-        }
+            async function main() {
+                const pages = await getPages()
+                await renderPages(pages)
+            }
 
-        (async () => {
-            await main()
-        })()
+            (async () => {
+                await main()
+            })()
 
-    </script>
-
+        </script>
+    </main>
     <footer>
         <p>
             &copy; 2026 stefanm8

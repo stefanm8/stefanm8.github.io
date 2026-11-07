@@ -33,30 +33,21 @@ def build_files_json(files):
         f.write(json.dumps(files_json))
 
 
-def with_parts(html: str) -> str:
-    with open("index.html", "r") as f:
-        index = f.read()
-    
+def with_layout(html: str) -> str:
+    index = pathlib.Path("index.html").read_text(encoding="utf-8")
+    before, main_open, content = index.partition('<main id="container">')
+    _, main_close, after = content.partition("</main>")
+    if not main_open or not main_close:
+        raise ValueError('index.html must contain a <main id="container">...</main> content slot')
 
-    
-    head = re.search(r"<head>(.*)</head>", index, re.IGNORECASE | re.DOTALL).group(1)
-    footer = re.search(r"<footer>(.*)</footer>", index, re.IGNORECASE | re.DOTALL).group(1)
-    head = re.sub(r"<title>(.*)</title>", lambda _: f"<title>{get_title(html)}</title>", head, flags=re.IGNORECASE | re.DOTALL)
-
-    return f"""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-{head}
-</head>
-<body>
-{html}
-<footer>
-{footer}
-</footer>
-</body>
-</html>
-"""
+    page = f"{before}{main_open}\n{html}{main_close}{after}"
+    return re.sub(
+        r"<title>.*?</title>",
+        lambda _: f"<title>{get_title(html)}</title>",
+        page,
+        count=1,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
 
 def build_blog(assets_dest: str):
     files = glob.glob("blog/*.md")
@@ -68,14 +59,10 @@ def build_blog(assets_dest: str):
         html = markdown2.markdown(markdown)
         dest = pathlib.Path(assets_dest) / serialize_filename(file.name, html)
         with open(dest, "w") as f:
-            f.write(with_parts(html))
+            f.write(with_layout(html))
     
     files = glob.glob(f"{assets_dest}/*.html")
     build_files_json(files)
-
-
-
-
 
 if __name__ == "__main__":
     assets_dest = "posts" # relative to workdir
